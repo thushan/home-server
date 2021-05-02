@@ -1,0 +1,78 @@
+substitutions:
+  device_name: environment-sensor-3
+  friendly_name: "Environment Sensor"
+  device_description: "Detects ambient temperature and pressure"
+
+esphome:
+  name: $device_name
+  comment: ${device_description}
+  platform: ESP32
+  board: m5stack-core-esp32
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${friendly_name}
+    password: !secret fallback_wifi_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret esp32_secret
+
+ota:
+  password: !secret esp32_secret
+
+i2c:
+  sda: 26
+  scl: 32
+  scan: True
+  id: bus_a
+
+text_sensor:
+  - platform: version
+    name: "Version"
+
+sensor:
+  - platform: uptime
+    name: "Uptime"
+
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+
+##
+# M5Stack ENV II 
+# https://m5stack-store.myshopify.com/products/env-ii-unit
+# https://docs.m5stack.com/#/en/unit/envII?id=comparison-between-sht30-and-dht12
+##
+
+##
+# SHT30
+# https://esphome.io/components/sensor/sht3xd.html
+  - platform: sht3xd
+    temperature:
+      name: "SHT30 Temperature"
+    humidity:
+      name: "SHT30 Humidity"
+    address: 0x44
+    update_interval: 60s
+
+##
+# BMP280
+# https://esphome.io/components/sensor/bmp280.html?highlight=bmp280
+  - platform: bmp280
+    temperature:
+      name: "BMP280 Temperature"
+      oversampling: 16x
+    pressure:
+      name: "BMP280 Pressure"
+    address: 0x76
+    update_interval: 60s
