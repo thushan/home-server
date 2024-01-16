@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: "mariadb:${MARIADB_VERSION}"
+    image: "mariadb:${MARIADB_VERSION:-latest}"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASS}"
       MYSQL_DATABASE: "${DB_NAME}"

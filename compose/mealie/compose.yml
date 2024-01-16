@@ -12,12 +12,12 @@ services:
     volumes:
       - mealie-data:/app/data/
     environment:
-      - ALLOW_SIGNUP=$ALLOW_SIGNUP
       - PUID=1000
       - PGID=1000
       - TZ=Australia/Melbourne
       - MAX_WORKERS=1
       - WEB_CONCURRENCY=1
+      - ALLOW_SIGNUP=$ALLOW_SIGNUP
       - BASE_URL=$APP_URL
       - DB_ENGINE=$DB_TYPE
       - POSTGRES_USER=$DB_USER
