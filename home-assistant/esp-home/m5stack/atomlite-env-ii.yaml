@@ -4,7 +4,7 @@ substitutions:
   device_description: "Detects ambient temperature and pressure."
 
 esphome:
-  name: ${device_name}
+  name: $device_name
   comment: ${device_description}
   
 esp32:
@@ -28,10 +28,16 @@ logger:
 
 # Enable Home Assistant API
 api:
-  password: !secret esp32_secret
+  encryption:
+    key: !secret esp32_secret_key
 
 ota:
   password: !secret esp32_secret
+
+#deep_sleep:
+  #id: deep_sleep_1
+  #run_duration: 10s
+  #sleep_duration: 10min
 
 i2c:
   sda: 26
@@ -44,8 +50,8 @@ text_sensor:
     name: "Version"
 
 sensor:
-  - platform: uptime
-    name: "Uptime"
+#  - platform: uptime
+#    name: "Uptime"
 
   - platform: wifi_signal
     name: "WiFi Signal"
@@ -81,8 +87,8 @@ sensor:
       name: "BMP280 Pressure"
       id: bme280_pressure
     address: 0x76
+    iir_filter: 16x
     update_interval: 60s
-    
 # https://esphome.io/cookbook/bme280_environment.html
   - platform: template
     name: "Altitude"
@@ -93,7 +99,6 @@ sensor:
     update_interval: 60s
     icon: 'mdi:signal'
     unit_of_measurement: 'm'
-    
   - platform: template
     name: "Absolute Humidity"
     lambda: |-
@@ -106,7 +111,6 @@ sensor:
     update_interval: 60s
     icon: 'mdi:water'
     unit_of_measurement: 'g/m³'
-    
   - platform: template
     name: "Dew Point"
     lambda: |-
@@ -115,3 +119,4 @@ sensor:
       ((17.67*id(bme280_temperature).state)/(243.5+id(bme280_temperature).state))));
     unit_of_measurement: °C
     icon: 'mdi:thermometer-alert'
+    update_interval: 60s
