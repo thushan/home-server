@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+    cloudflared:
+        image: 'cloudflare/cloudflared:latest'
+        container_name: cloudflare-tunnel
+        command: 'tunnel --no-autoupdate run'
+        restart: unless-stopped
+        environment:
+          # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-run-parameters/#token
+          - TUNNEL_TOKEN="${CLOUDFLARE_TOKEN}"
+        labels:
+          - "com.centurylinklabs.watchtower.enable=true"

@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - "3000:3000"
+    user: $PUID
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      GF_SERVER_ROOT_URL: ${GF_SERVER_ROOT_URL:-http://localhost:3000}
+      # https://grafana.com/grafana/plugins/
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel,grafana-piechart-panel,vonage-status-panel,briangann-gauge-panel"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+volumes:
+  grafana-data:
+    driver: local

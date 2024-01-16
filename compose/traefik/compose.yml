@@ -1,0 +1,41 @@
+version: "3"
+
+networks:
+  public:
+    driver: bridge
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /opt/traefik/providers:/config
+      - /opt/traefik/certs:/etc/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - public
+    command:
+      - "--api.insecure"
+      - "--accesslog"
+      - "--entrypoints.web.Address=:80"
+      - "--entrypoints.websecure.Address=:443"
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.docker.defaultRule=Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+      - "--providers.file.directory=/config"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.tlsresolver.acme.tlschallenge"
+      - "--certificatesresolvers.tlsresolver.acme.email=${TLS_EMAIL}"
+      - "--certificatesresolvers.tlsresolver.acme.storage=acme.json"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik_frontend.rule=Host(`${TRAEFIK_PROXY_URL}`)"
+      - "traefik.http.routers.traefik_frontend.entrypoints=websecure"
+      - "traefik.http.routers.traefik_frontend.tls.certresolver=tlsresolver"
+      - "traefik.http.services.traefik_frontend.loadbalancer.server.port=8080"
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped

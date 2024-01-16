@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  app:
+    container_name: fireflyiii
+    image: fireflyiii/core:latest
+    environment: 
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL}
+      TRUSTED_PROXIES: '**'
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_CONNECTION: ${DB_TYPE}
+      DB_DATABASE: ${DB_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASS}
+      TZ: "Australia/Melbourne"
+    volumes:
+      - /opt/fireflyiii:/var/www/html/storage/upload
+    ports:
+      - 5550:8080
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  cron:
+    container_name: fireflyiii_cron
+    image: alpine
+    command: sh -c "echo \"0 3 * * * wget -qO- ${APP_URL}/api/v1/cron/${COMMAND_LINE_TOKEN}\" | crontab - && crond -f -L /dev/stdout"
+    restart: unless-stopped

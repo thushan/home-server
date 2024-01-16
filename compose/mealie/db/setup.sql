@@ -1,0 +1,2 @@
+CREATE USER mealie WITH PASSWORD '<password>';
+CREATE DATABASE mealie WITH OWNER mealie ENCODING 'utf8' TEMPLATE template0;

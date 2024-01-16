@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v1.0.0-RC2
+    container_name: mealie
+    ports:
+        - "9925:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    volumes:
+      - mealie-data:/app/data/
+    environment:
+      - ALLOW_SIGNUP=$ALLOW_SIGNUP
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+      - MAX_WORKERS=1
+      - WEB_CONCURRENCY=1
+      - BASE_URL=$APP_URL
+      - DB_ENGINE=$DB_TYPE
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASS
+      - POSTGRES_SERVER=$DB_HOST
+      - POSTGRES_PORT=$DB_PORT
+      - POSTGRES_DB=$DB_NAME
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+volumes:
+  mealie-data:
+    driver: local
