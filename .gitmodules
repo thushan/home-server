@@ -1,0 +1,3 @@
+[submodule "compose/invoiceninja/source"]
+	path = compose/invoiceninja/source
+	url = https://github.com/invoiceninja/dockerfiles.git
