@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+    it-tools:
+      image: 'corentinth/it-tools:latest'
+      ports:
+          - '10015:80'
+      restart: unless-stopped
+      container_name: it-tools
+      labels:
+        - "com.centurylinklabs.watchtower.enable=true"
