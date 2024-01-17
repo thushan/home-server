@@ -7,6 +7,6 @@ services:
         restart: unless-stopped
         environment:
           # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-run-parameters/#token
-          - TUNNEL_TOKEN="${CLOUDFLARE_TOKEN}"
+          - TUNNEL_TOKEN=$CLOUDFLARE_TOKEN
         labels:
           - "com.centurylinklabs.watchtower.enable=true"
