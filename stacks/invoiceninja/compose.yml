@@ -1,5 +1,4 @@
-# src:
-# fefc51c https://github.com/invoiceninja/dockerfiles/blob/master/docker-compose.yml
+# src: https://github.com/invoiceninja/dockerfiles/blob/master/docker-compose.yml
 # uses a submodule in ./source
 version: "3.7"
 services:
@@ -24,23 +23,23 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+    depends_on:
+      - db
     volumes:
       - ./source/config/hosts:/etc/hosts:ro
       - ./source/docker/app/public:/var/www/app/public:rw,delegated
       - ./source/docker/app/storage:/var/www/app/storage:rw,delegated
       - ./source/config/php/php.ini:/usr/local/etc/php/php.ini
       - ./source/config/php/php-cli.ini:/usr/local/etc/php/php-cli.ini
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-    depends_on:
-      - db
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
     networks:
       - invoiceninja
   db:
-    image: mariadb:10.4
+    image: mariadb:latest
     ports:
       - 3305:3306
     restart: always
