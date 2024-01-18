@@ -14,8 +14,10 @@ services:
       - app
     ports:
       - "8084:80"
+    networks:
+      - invoiceninja
     extra_hosts:
-      - "in5.localhost:192.168.0.124 " #host and ip
+      - "in5.localhost:192.168.0.124 "
 
   app:
     image: invoiceninja/invoiceninja:5
@@ -26,5 +28,24 @@ services:
       - ./source/docker/app/storage:/var/www/app/storage:rw,delegated
       - ./source/config/php/php.ini:/usr/local/etc/php/php.ini
       - ./source/config/php/php-cli.ini:/usr/local/etc/php/php-cli.ini
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+    depends_on:
+      - db
+    extra_hosts:
+      - "in5.localhost:192.168.0.124 "
+    networks:
+      - invoiceninja
+      
+  db:
+    image: mariadb:10.4
+    ports:
+      - "3305:3306"
+    restart: always
+    volumes:
+      - ./source/docker/mysql/data:/var/lib/mysql:rw,delegated
+    networks:
+      - invoiceninja
     extra_hosts:
       - "in5.localhost:192.168.0.124 " #host and ip
