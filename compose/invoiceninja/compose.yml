@@ -1,27 +1,29 @@
 # src:
 # fefc51c https://github.com/invoiceninja/dockerfiles/blob/master/docker-compose.yml
 # uses a submodule in ./source
-version: '3.7'
-
+version: "3.7"
 services:
   server:
     image: nginx
     restart: always
+    env_file:
+      - .env
     volumes:
       - ./source/config/nginx/in-vhost.conf:/etc/nginx/conf.d/in-vhost.conf:ro
       - ./source/docker/app/public:/var/www/app/public:ro
     depends_on:
       - app
     ports:
-      - "8084:80"
+      - 8084:80
     networks:
       - invoiceninja
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
-
   app:
     image: invoiceninja/invoiceninja:5
     restart: always
+    env_file:
+      - .env
     volumes:
       - ./source/config/hosts:/etc/hosts:ro
       - ./source/docker/app/public:/var/www/app/public:rw,delegated
@@ -37,15 +39,18 @@ services:
       - "in5.localhost:192.168.0.124 "
     networks:
       - invoiceninja
-      
   db:
     image: mariadb:10.4
     ports:
-      - "3305:3306"
+      - 3305:3306
     restart: always
+    env_file:
+      - .env
     volumes:
       - ./source/docker/mysql/data:/var/lib/mysql:rw,delegated
     networks:
       - invoiceninja
     extra_hosts:
       - "in5.localhost:192.168.0.124 " #host and ip
+networks:
+  invoiceninja: null
