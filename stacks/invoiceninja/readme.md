@@ -19,9 +19,18 @@
 
 **CONTEXT** These instructions are for [Dockge](https://github.com/louislam/dockge) but should work for all.
 
-* Create the stack with `compose.yml` but don't run it
-* Create a link to the `config` folder in the container's stack folder.
-* Start the InvoiceNinja up.
+Assumes:
+- `invoiceninja` - Name of your docker-stack in Dockge etc.
+- `/opt/home-server` - This repo is cloned to
+- `/opt/stacks/` - Where Dockge or your docker compose stacks reside.
+
+The process is:
+
+* Create the stack with `compose.yml` but don't run it (Save)
+* Run `scripts/initial-setup.sh`, this creates docker volumes, sets permissions & creates `config` symlinks
+* Start the InvoiceNinja up!
+
+Create them manually otherwise:
 
 ```bash
 $ ln -s /opt/home-server/stack/invoiceninja/config /opt/stacks/invoiceninja/config
