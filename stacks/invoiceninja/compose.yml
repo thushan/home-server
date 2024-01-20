@@ -8,8 +8,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./source/config/nginx/in-vhost.conf:/etc/nginx/conf.d/in-vhost.conf:ro
-      - ./source/docker/app/public:/var/www/app/public:ro
+      - ./config/nginx/in-vhost.conf:/etc/nginx/conf.d/in-vhost.conf:ro
+      - ninja-public:/var/www/app/public:ro
     depends_on:
       - app
     ports:
@@ -19,21 +19,18 @@ services:
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
   app:
-    image: invoiceninja/invoiceninja:5
+    image: invoiceninja/invoiceninja:latest
     restart: always
     env_file:
       - .env
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
     depends_on:
       - db
     volumes:
-      - ./source/config/hosts:/etc/hosts:ro
-      - ./source/docker/app/public:/var/www/app/public:rw,delegated
-      - ./source/docker/app/storage:/var/www/app/storage:rw,delegated
-      - ./source/config/php/php.ini:/usr/local/etc/php/php.ini
-      - ./source/config/php/php-cli.ini:/usr/local/etc/php/php-cli.ini
+      - ./config/hosts:/etc/hosts:ro
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/php/php-cli.ini:/usr/local/etc/php/php-cli.ini
+      - ninja-public:/var/www/app/public:rw,delegated
+      - ninja-storage:/var/www/app/storage:rw,delegated
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
     networks:
@@ -46,10 +43,17 @@ services:
     env_file:
       - .env
     volumes:
-      - ./source/docker/mysql/data:/var/lib/mysql:rw,delegated
+      - mariadb-data:/var/lib/mysql:rw,delegated
     networks:
       - invoiceninja
     extra_hosts:
       - "in5.localhost:192.168.0.124 " #host and ip
 networks:
   invoiceninja: null
+volumes:
+  mariadb-data:
+    driver: local
+  ninja-public:
+    driver: local
+  ninja-storage:
+    driver: local

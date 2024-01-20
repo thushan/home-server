@@ -1,3 +1,0 @@
-[submodule "stacks/invoiceninja/source"]
-	path = stacks/invoiceninja/source
-	url = https://github.com/invoiceninja/dockerfiles.git

@@ -7,10 +7,8 @@ Most of the work in this repo is written in docker compose stacks and is ideal f
 ## Get it
 
 ```bash
-$ git clone --recurse-submodules https://github.com/thushan/home-server.git
+$ git clone https://github.com/thushan/home-server.git
 ```
-
-Yes, there are submodules :(
 
 ## Structure
 
