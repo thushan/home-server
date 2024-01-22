@@ -63,11 +63,13 @@ services:
     env_file:
       - .env
     volumes:
-      - ./config/backup:/etc/dockervolumebackup/conf.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - mariadb-backups:/backup/mariadb:ro
       - ninja-storage:/backup/ninja-storage:ro
       - ninja-public:/backup/ninja-public:ro
+      - ./config/backup:/etc/dockervolumebackup/conf.d
 
 networks:
   invoiceninja: null
