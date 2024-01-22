@@ -54,11 +54,11 @@ services:
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
     labels:
-      - "docker-volume-backup.archive-pre=/bin/sh -c 'mariadb-dump --lock-tables --databases invoiceninja > /tmp/backups/dump.sql'"
+      - "docker-volume-backup.archive-pre=/bin/sh -c 'mariadb-dump --user=$MYSQL_USER --password=$MYSQL_PASSWORD --lock-tables --databases $MYSQL_DATABASE > /tmp/backups/$MYSQL_DATABASE.sql'"
       - "docker-volume-backup.exec-label=mariadb"
 
   backup:
-    image: offen/docker-volme-backup:v2
+    image: offen/docker-volume-backup:latest
     restart: always
     env_file:
       - .env
