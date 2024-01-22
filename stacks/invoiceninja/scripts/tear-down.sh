@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Invoice Ninja Tear-down Script
-
+STACK_NAME="invoiceninja"
 NINJA_VOLUMES=(
-    invoiceninja_mariadb-data
-    invoiceninja_ninja-public
-    invoiceninja_ninja-storage
+    container_mariadb-data
+    container_ninja-public
+    container_ninja-storage
 )
 
 INFO=$(tput setaf 4)
@@ -16,6 +16,9 @@ show_info() {
 
 show_info "Removing docker volumes..."
 for volume in "${NINJA_VOLUMES[@]}"; do
-    docker volume rm $volume
+	volume_name="${volume/container/$STACK_NAME}"
+	if docker volume inspect "$volume_name" > /dev/null 2>&1; then
+		docker volume rm $volume
+	fi
 done
 show_info "Jobs Done /human-peasant"
