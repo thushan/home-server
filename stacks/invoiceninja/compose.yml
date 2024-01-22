@@ -18,6 +18,7 @@ services:
       - invoiceninja
     extra_hosts:
       - "in5.localhost:192.168.0.124 "
+      
   app:
     image: invoiceninja/invoiceninja:latest
     restart: always
@@ -35,6 +36,9 @@ services:
       - "in5.localhost:192.168.0.124 "
     networks:
       - invoiceninja
+    labels:
+      - "docker-volume-backup.stop-during-backup=invoice-ninja-app"
+
   db:
     image: mariadb:latest
     ports:
@@ -44,14 +48,34 @@ services:
       - .env
     volumes:
       - mariadb-data:/var/lib/mysql:rw,delegated
+      - mariadb-backups:/tmp/backups
     networks:
       - invoiceninja
     extra_hosts:
-      - "in5.localhost:192.168.0.124 " #host and ip
+      - "in5.localhost:192.168.0.124 "
+    labels:
+      - "docker-volume-backup.archive-pre=/bin/sh -c 'mariadb-dump --lock-tables --databases invoiceninja > /tmp/backups/dump.sql'"
+      - "docker-volume-backup.exec-label=mariadb"
+
+  backup:
+    image: offen/docker-volme-backup:v2
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./config/backup:/etc/dockervolumebackup/conf.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - mariadb-backups:/backup/mariadb:ro
+      - ninja-storage:/backup/ninja-storage:ro
+      - ninja-public:/backup/ninja-public:ro
+
 networks:
   invoiceninja: null
+
 volumes:
   mariadb-data:
+    driver: local
+  mariadb-backups:
     driver: local
   ninja-public:
     driver: local
