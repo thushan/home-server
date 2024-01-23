@@ -10,6 +10,23 @@ Most of the work in this repo is written in docker compose stacks and is ideal f
 $ git clone https://github.com/thushan/home-server.git
 ```
 
+
+> \[!TIP]
+>
+> On [dockge](https://github.com/louislam/dockge), stacks in `/opt/stacks` have a `.env` for environment variables.
+>
+> On [portainer](https://github.com/portainer/portainer), stacks have a `stack.env` reference, so you'll have to update:
+> ```yaml
+>    env_file:
+>      - .env
+> ```
+> to:
+> ```yaml
+>    env_file:
+>      - stack.env
+> ```
+
+
 ## Structure
 
 * [~/stacks](./stacks/) - Docker Compose stacks.
