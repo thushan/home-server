@@ -21,9 +21,9 @@ show_info "Creating docker volumes..."
 for volume in "${NINJA_VOLUMES[@]}"; do
 	volume_name="${volume/container/$STACK_NAME}"
 	if docker volume inspect "$volume_name" > /dev/null 2>&1; then
-		show_info "Volume '${INFF}$volume_name${ENDMARKER}' already exists."
+		show_info "Volume '${INFF}$volume_name${INFF}' already exists."
 	else
-		show_info "Volume '${INFF}$volume_name${ENDMARKER}' does not exist. Creating..."
+		show_info "Volume '${INFF}$volume_name${INFF}' does not exist. Creating..."
 		docker volume create "$volume_name"
 	fi
 	show_info "Changing ownership of docker volumes..."
@@ -35,9 +35,9 @@ done
 show_info "Creating shell links..."
 
 if [ -L "$LINK_CONFIG" ] && [ "$(readlink -- "$LINK_CONFIG")" = "$LINK_TARGET" ]; then
-    show_info "Link '${INFF}$LINK_CONFIG${ENDMARKER}' already exists and points to '${INFF}$LINK_TARGET${ENDMARKER}'."
+    show_info "Link '${INFF}$LINK_CONFIG${INFF}' already exists and points to '${INFF}$LINK_TARGET${INFF}'."
 else
-    show_info "Creating symbolic link '${INFF}$LINK_CONFIG${ENDMARKER}' that points to '${INFF}$LINK_TARGET${ENDMARKER}'..."
+    show_info "Creating symbolic link '${INFF}$LINK_CONFIG${INFF}' that points to '${INFF}$LINK_TARGET${INFF}'..."
 	ln -s "$LINK_CONFIG" "$LINK_TARGET"
 fi
 
