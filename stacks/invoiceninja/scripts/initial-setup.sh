@@ -10,6 +10,7 @@ NINJA_VOLUMES=(
 )
 
 INFO=$(tput setaf 4)
+INFF=$(tput setaf 3)
 ENDMARKER=`tput sgr0`
 
 show_info() {
@@ -20,24 +21,24 @@ show_info "Creating docker volumes..."
 for volume in "${NINJA_VOLUMES[@]}"; do
 	volume_name="${volume/container/$STACK_NAME}"
 	if docker volume inspect "$volume_name" > /dev/null 2>&1; then
-		show_info "Volume '$volume_name' already exists."
+		show_info "Volume '${INFF}$volume_name${ENDMARKER}' already exists."
 	else
-		show_info "Volume '$volume_name' does not exist. Creating..."
+		show_info "Volume '${INFF}$volume_name${ENDMARKER}' does not exist. Creating..."
 		docker volume create "$volume_name"
 	fi
 	show_info "Changing ownership of docker volumes..."
-	# credit: https://www.reddit.com/r/selfhosted/comments/11l6wkq/how_to_set_up_invoice_ninja_under_docker_using/
 	mount_point=$(docker volume inspect --format '{{ .Mountpoint }}' "$volume_name")
+	# credit: https://www.reddit.com/r/selfhosted/comments/11l6wkq/how_to_set_up_invoice_ninja_under_docker_using/
 	chown 1500:1500 $mount_point
 done
 
 show_info "Creating shell links..."
 
 if [ -L "$LINK_CONFIG" ] && [ "$(readlink -- "$LINK_CONFIG")" = "$LINK_TARGET" ]; then
-    echo "Link '$LINK_CONFIG' already exists and points to '$LINK_TARGET'."
+    show_info "Link '${INFF}$LINK_CONFIG${ENDMARKER}' already exists and points to '${INFF}$LINK_TARGET${ENDMARKER}'."
 else
-    echo "Creating symbolic link '$LINK_CONFIG' that points to '$LINK_TARGET'..."
+    show_info "Creating symbolic link '${INFF}$LINK_CONFIG${ENDMARKER}' that points to '${INFF}$LINK_TARGET${ENDMARKER}'..."
 	ln -s "$LINK_CONFIG" "$LINK_TARGET"
 fi
 
-show_info "Jobs Done /human-peasant"
+show_info "Jobs Done!"
