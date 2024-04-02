@@ -1,0 +1,88 @@
+version: "3"
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+    volumes:
+      - jellyfin-config:/config
+      - /media/content/tv:/data/tvshows
+      - /media/content/movies:/data/movies
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+    volumes:
+      - sonar-config:/config
+      - /media/content/tv:/data/tvshows
+      - /media/content/_incoming:/downloads/complete
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+    volumes:
+      - radarr-config:/config
+      - /media/content/_incoming:/downloads/complete
+      - /media/content/movies:/data/movies
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+    volumes:
+      - bazarr-config:/config
+      - /media/content/tv:/tvshows
+      - /media/content/movies:/movies
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:develop
+    container_name: jellyseerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Melbourne
+    ports:
+      - 5055:5055
+    volumes:
+      - jellyseerr-config:/app/config
+    restart: unless-stopped
+    depends_on:
+      - radarr
+      - sonarr
+volumes:
+  jellyfin-config:
+    driver: local
+  sonar-config:
+    driver: local
+  bazarr-config:
+    driver: local
+  radarr-config:
+    driver: local
+  jellyseerr-config:
+    driver: local
