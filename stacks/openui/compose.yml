@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  openui:
+    image: ghcr.io/wandb/openui
+    container_name: openui
+    ports:
+      - 7878:7878
+    env_file:
+      - .env
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
