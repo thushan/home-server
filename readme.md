@@ -1,5 +1,8 @@
 # Home Server Configs
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+![Updated](https://img.shields.io/github/last-commit/thushan/home-server)
+
 These are my generic home server configurations for various things.
 
 Most of the work in this repo is written in docker compose stacks and is ideal for use with [dockge](https://github.com/louislam/dockge).
