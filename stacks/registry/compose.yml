@@ -1,0 +1,32 @@
+services:
+  registry:
+    image: registry:latest
+    container_name: docker-registry
+    restart: unless-stopped
+    ports:
+      - 9000:5000
+    volumes:
+      - ./registry-data:/var/lib/registry
+    environment:
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin=["http://<ip>:9001"]
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods=["HEAD", "GET",
+        "OPTIONS", "DELETE"]
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers=["Authorization",
+        "Accept", "Origin"]
+  registry-ui:
+    image: joxit/docker-registry-ui:main
+    container_name: registry-ui
+    restart: unless-stopped
+    ports:
+      - 9001:80
+    environment:
+      - SINGLE_REGISTRY=true
+      - REGISTRY_TITLE="ContainMySelf Registry"
+      - REGISTRY_URL=http://<ip>:9000
+      - NGINX_PROXY_PASS_URL=http://<ip>:9000
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+    depends_on:
+      - registry
+networks: {}
